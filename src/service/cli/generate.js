@@ -1,21 +1,21 @@
-"use strict";
+'use strict';
 
-const fs = require("fs").promises;
+const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 
 const {
   DEFAULT_OFFERS_VALUE,
   ExitCode,
   MAX_OFFERS,
-} = require("../../constans");
+} = require(`../../constans`);
 
 const FILE_SENTENCES_PATH = `./data/sentences.txt`;
 const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
 
-const { getRandomInt, shuffle } = require("../../utils");
+const {getRandomInt, shuffle} = require(`../../utils`);
 
-const types = ["offer", "sale"];
+const types = [`offer`, `sale`];
 
 const generateOffers = (count, titles, sentences, categories) => {
   return Array(count)
@@ -32,8 +32,8 @@ const generateOffers = (count, titles, sentences, categories) => {
 
 const asyncReadFile = async (filePath) => {
   try {
-    const content = await fs.readFile(filePath, "utf-8");
-    return content.trim().split("\n");
+    const content = await fs.readFile(filePath, `utf-8`);
+    return content.trim().split(`\n`);
   } catch (err) {
     console.error(chalk.red(err));
     return [];
@@ -41,13 +41,13 @@ const asyncReadFile = async (filePath) => {
 };
 
 module.exports = {
-  name: "--generate",
+  name: `--generate`,
   async run(args) {
     const [count] = args;
     const countOffer = Number.parseInt(count, 10) || DEFAULT_OFFERS_VALUE;
 
     if (countOffer > MAX_OFFERS) {
-      console.log(chalk.red("Не больше 1000 объявлений"));
+      console.log(chalk.red(`Не больше 1000 объявлений`));
       process.exit(ExitCode.error);
     }
 
@@ -55,12 +55,10 @@ module.exports = {
     const sentences = await asyncReadFile(FILE_SENTENCES_PATH);
     const categories = await asyncReadFile(FILE_CATEGORIES_PATH);
 
-    const content = JSON.stringify(
-      generateOffers(countOffer, titles, sentences, categories)
-    );
+    const content = JSON.stringify(generateOffers(countOffer, titles, sentences, categories));
 
     try {
-      await fs.writeFile("mocks.json", content);
+      await fs.writeFile(`mocks.json`, content);
       console.info(chalk.green(`Operation success. File created.`));
       process.exit(ExitCode.success);
     } catch (err) {
